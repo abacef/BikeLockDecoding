@@ -24,7 +24,7 @@ public class Run {
 
     private int validCount;
 
-    private void check(String word) {
+    private boolean check(String word) {
         URL url;
         InputStream is = null;
         BufferedReader br;
@@ -33,27 +33,31 @@ public class Run {
         possibleWriter.println(word);
         possibleCount++;
 
+        if (!word.contains("a") && !word.contains("e") && !word.contains("i")
+                && !word.contains("o") && !word.contains("u")) {
+            System.out.println(word + " is not a word");
+            return false;
+        }
+
         try {
             url = new URL(baseURL + word);
             is = url.openStream();
             br = new BufferedReader(new InputStreamReader(is));
 
-            boolean flag = false;
             while ((line = br.readLine()) != null) {
                 if (line.contains(notAMatch)) {
-                    flag = true;
+                    System.out.println(word + " is not a word");
+                    return false;
                 }
             }
-            if (flag) {
-                System.out.println(word + " is not a word");
-            }
-            else {
-                System.out.println(word + " IS A WORD!");
-                validCount++;
-                validWriter.println(word);
-            }
+            System.out.println(word + " IS A WORD!");
+            validCount++;
+            validWriter.println(word);
+            return true;
+
         } catch (FileNotFoundException fnf) {
             System.out.println(word + " is not a word");
+            return false;
         }
         catch (MalformedURLException mue) {
             mue.printStackTrace();
@@ -66,6 +70,7 @@ public class Run {
                 // Squash
             }
         }
+        return false;
     }
 
     public void run(ArrayList<String[]> cylenders) {
@@ -91,6 +96,8 @@ public class Run {
         possibleWriter.println("Possible words: " + possibleCount);
         validWriter.println("Valid words: " + validCount);
         System.out.println("This process took: " + (System.currentTimeMillis()
-                - time) / 1000 + " seconds.");
+                - time) / (1000 * 60) + " minutes.");
+        validWriter.close();
+        possibleWriter.close();
     }
 }
