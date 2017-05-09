@@ -8,14 +8,21 @@ import java.util.ArrayList;
  */
 public class Run {
 
-    private static final String baseURL = "https://en.oxforddictionaries" +
-            ".com/search?utf8=%E2%9C%93&filter=dictionary&query=";
+    /** https://en.oxforddictionaries.com/definition/"; */
+    private static final String baseURL = "http://www.learnersdictionary" +
+            ".com/definition/";
 
-    private static final String notAMatch = "No exact matches found for";
+    /** "No exact matches found for"; */
+    private static final String notAMatch = "The word you have entered is not" +
+            " in the dictionary";
 
     private PrintWriter possibleWriter;
 
     private PrintWriter validWriter;
+
+    private int possibleCount;
+
+    private int validCount;
 
     private void check(String word) {
         URL url;
@@ -24,22 +31,31 @@ public class Run {
         String line;
 
         possibleWriter.println(word);
+        possibleCount++;
 
         try {
             url = new URL(baseURL + word);
             is = url.openStream();
             br = new BufferedReader(new InputStreamReader(is));
 
+            boolean flag = false;
             while ((line = br.readLine()) != null) {
                 if (line.contains(notAMatch)) {
-                    System.out.println(word + " is not a word");
-                }
-                else {
-                    System.out.println(word + " IS A WORD!");
-                    validWriter.println(word);
+                    flag = true;
                 }
             }
-        } catch (MalformedURLException mue) {
+            if (flag) {
+                System.out.println(word + " is not a word");
+            }
+            else {
+                System.out.println(word + " IS A WORD!");
+                validCount++;
+                validWriter.println(word);
+            }
+        } catch (FileNotFoundException fnf) {
+            System.out.println(word + " is not a word");
+        }
+        catch (MalformedURLException mue) {
             mue.printStackTrace();
         } catch (IOException ioe) {
             ioe.printStackTrace();
@@ -53,6 +69,7 @@ public class Run {
     }
 
     public void run(ArrayList<String[]> cylenders) {
+        long time = System.currentTimeMillis();
         try {
             validWriter = new PrintWriter(new FileWriter(new File
                     ("data/allValidWords")));
@@ -71,5 +88,9 @@ public class Run {
                 }
             }
         }
+        possibleWriter.println("Possible words: " + possibleCount);
+        validWriter.println("Valid words: " + validCount);
+        System.out.println("This process took: " + (System.currentTimeMillis()
+                - time) / 1000 + " seconds.");
     }
 }
