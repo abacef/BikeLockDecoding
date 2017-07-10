@@ -8,22 +8,30 @@ import java.util.ArrayList;
  */
 public class Run {
 
-    /** https://en.oxforddictionaries.com/definition/"; */
+    /** The url for the dictionary website */
     private static final String baseURL = "http://www.learnersdictionary" +
             ".com/definition/";
 
-    /** "No exact matches found for"; */
+    /** A string that says that there is not a match */
     private static final String notAMatch = "The word you have entered is not" +
             " in the dictionary";
 
+    /** A reference to the writer for all of the possible words */
     private PrintWriter possibleWriter;
 
+    /** A reference to the writer for all of the valid words */
     private PrintWriter validWriter;
 
+    /** A counter for all of the possible words */
     private int possibleCount;
 
+    /** A counter for all of the valid words */
     private int validCount;
 
+    /**
+     * @param word a string to check if it is actually a word
+     * @return if the parameter is actually a word or not
+     */
     private boolean check(String word) {
         URL url;
         InputStream is = null;
@@ -73,7 +81,14 @@ public class Run {
         return false;
     }
 
-    public void run(ArrayList<String[]> cylenders) {
+    /**
+     * initializes some variables and runs every possible combination. Then
+     * it prints out the time it took to run the code.
+     *
+     * @param cylinders an array of strings of the cylinders of the lock
+     *                  going from left to right.
+     */
+    public void run(ArrayList<String[]> cylinders) {
         long time = System.currentTimeMillis();
         try {
             validWriter = new PrintWriter(new FileWriter(new File
@@ -83,12 +98,12 @@ public class Run {
         } catch (IOException e) {
             // Squash
         }
-        for (int i0 = 0; i0 < cylenders.get(0).length; i0++) {
-            for (int i1 = 0; i1 < cylenders.get(1).length; i1++) {
-                for (int i2 = 0; i2 < cylenders.get(2).length; i2++) {
-                    for (int i3 = 0; i3 < cylenders.get(3).length; i3++) {
-                        check(cylenders.get(0)[i0] + cylenders.get(1)[i1] +
-                                cylenders.get(2)[i2] + cylenders.get(3)[i3]);
+        for (int i0 = 0; i0 < cylinders.get(0).length; i0++) {
+            for (int i1 = 0; i1 < cylinders.get(1).length; i1++) {
+                for (int i2 = 0; i2 < cylinders.get(2).length; i2++) {
+                    for (int i3 = 0; i3 < cylinders.get(3).length; i3++) {
+                        check(cylinders.get(0)[i0] + cylinders.get(1)[i1] +
+                                cylinders.get(2)[i2] + cylinders.get(3)[i3]);
                     }
                 }
             }
